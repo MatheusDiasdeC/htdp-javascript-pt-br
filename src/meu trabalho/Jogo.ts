@@ -2,6 +2,9 @@ import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImag
 import { reactor } from "../../lib/universe";
 import { testes } from "../../lib/utils";
 import imgTartarugaUrl from "./Tartaruga.png";
+import imgCaranguejoUrl from "./Caranguejo.png";
+import imgGaivotaUrl from "./Gaivota.png";
+import imgCoracaoUrl from "./Coracao.png";
 
 //Coisas para fazer o trabalho funcionar:
 // - Como ativar o servidor -> readme
@@ -11,19 +14,41 @@ import imgTartarugaUrl from "./Tartaruga.png";
 
 
 //Criação da Tela
-const [LARGURA, ALTURA] = [600, 400]
+const [LARGURA, ALTURA] = [900, 600]
 
 const TELA = cenaVazia(LARGURA, ALTURA)
+
+
+//-----------------------------------------------------------------------------------------------------------
+
 
 //Criar Tartaruga
 const IMG_TARTARUGA_LESTE = carregarImagem(imgTartarugaUrl, 110, 100)
 const IMG_TARTARUGA_OESTE = espelhar(IMG_TARTARUGA_LESTE)
 
-//Ver Imagem na Tela (Teste)
-//IMG_T_LESTE.desenha()
+//Criar Caranguejo
+const IMG_CARANGUEJO = carregarImagem(imgCaranguejoUrl, 110, 100)
 
-//Altura Inicial de T
+//Criar Gaivota
+const IMG_GAIVOTA = carregarImagem(imgGaivotaUrl, 100, 100)
+
+//Criar Coração
+const  IMG_CORACAO = carregarImagem(imgCoracaoUrl, 100, 100)
+
+//-----------------------------------------------------------------------------------------------------------
+
+
+//Ver Imagem na Tela (Teste)
+//IMG_CARANGUEJO.desenha()
+
+
+//Altura Inicial de Tartaruga
 const Y_INICIAL_TARTARUGA = ALTURA / 2
+
+//Altura Inicial de Caranguejo
+const Y_INICIAL_CARANGUEJO = 4 * (ALTURA / 5)
+
+//Altura Inicial de Gaivota
 
 //Limites da Tartaruga
 const LIMITE_ESQUERDA_TARTARUGA = 0 + larguraImagem(IMG_TARTARUGA_LESTE) / 2
@@ -32,21 +57,78 @@ const LIMITE_BAIXO_TARTARUGA = ALTURA - larguraImagem(IMG_TARTARUGA_LESTE) / 2
 const LIMITE_CIMA_TARTARUGA = 0 + larguraImagem(IMG_TARTARUGA_LESTE) / 2
 
 //Velocidade Inicial
-const DX_PADRAO = 3
+const D_PADRAO = 3
 
 
 //Definição de Dados
+interface Jogo {
+    tart: Tartaruga,
+    caras: Caranguejo[],
+    gaivas: Gaivota[],
+    itensVida: ItemVida[],
+    blocos: Bloco[],
+    vidas: number
+}
 
-interface Tartaruga {
+//interface genérica para todos os personagens. Vai substituitir todas as coisas que se movem.
+interface Personagem {
     x: number,
     y: number,
     dx: number,
-    dy: number
+    dy: number,
+    
+    limiteCima: number,
+    limiteBaixo: number,
+    limiteEsquerdo: number,
+    limiteDireito: number
 }
 
-//Cria um "objeto" T
-function makeT(x: number, y: number, dx: number, dy: number): Tartaruga {
-    return { x: x, y: y, dx: dx, dy: dy };
+
+//EXEMPLOS
+//const TART_INICIAL = {x: LIMITE_ESQUERDA_TARTARUGA, y: ALTURA/2, dx: 0, dy: 0}
+
+const TART_INICIAL = {
+    x: LIMITE_ESQUERDA_TARTARUGA,
+    y: ALTURA/2,
+    dx: 0,
+    dy: 0,
+
+    limiteCima: LIMITE_CIMA_TARTARUGA,
+    limiteBaixo: LIMITE_BAIXO_TARTARUGA,
+    limiteEsquerdo: LIMITE_ESQUERDA_TARTARUGA,
+    limiteDireito: LIMITE_DIREITA_TARTARUGA
+}
+//dx e dy mudam no trata tecla
+
+//EXEMPLOS
+const CARA_VERTICAL = {x: 2 * (LARGURA / 5), y: LIMITE_CIMA_TARTARUGA, dx: 0, dy: D_PADRAO}
+const CARA_HORIZONTAL = {X: 2 * (LARGURA / 5), y: ALTURA / 3, dx: D_PADRAO, dy: 0}
+
+
+
+
+interface Bloco{
+    x: number,
+    y: number
+}
+
+interface ItemVida {
+    x: number,
+    y: number
+}
+
+
+
+//Cria um "objeto" T (Tartaruga) e C (Caranguejo)
+function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem {
+    return { x: x, y: y, dx: dx, dy: dy,
+             limiteCima:  LIMITE_CIMA_TARTARUGA, limiteBaixo: LIMITE_BAIXO_TARTARUGA, limiteEsquerdo: LIMITE_ESQUERDA_TARTARUGA, limiteDireito: LIMITE_DIREITA_TARTARUGA};
+}
+
+function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personagem {
+    return { x: x, y: y, dx: dx, dy: dy,
+             limiteCima:  LIMITE_CIMA_TARTARUGA, limiteBaixo: LIMITE_BAIXO_TARTARUGA, limiteEsquerdo: LIMITE_ESQUERDA_TARTARUGA, limiteDireito: LIMITE_DIREITA_TARTARUGA};
+             //Criar limites para caranguejos e gaivotas
 }
 
 //Posições Iniciais de T
@@ -55,6 +137,11 @@ const TARTARUGA_INICIAL2 = makeT(LIMITE_ESQUERDA_TARTARUGA + DX_PADRAO, Y_INICIA
 
 const TARTARUGA0 = makeT(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 3, 4)
 const TARTARUGA1 = makeT(LIMITE_ESQUERDA_TARTARUGA + 3, Y_INICIAL_TARTARUGA + 4, 3, 4)
+
+
+//const CARANGUEJO_INICIAL = makeC()
+
+//const   CARANGUEJO_INICIAL = makeC()     !!!
 
 // const T_MEIO = (x: LARGURA/2, y: 0, dx: 3, dy:0}
 
@@ -67,7 +154,7 @@ const TARTARUGA_VOLTANDO = makeT(LARGURA / 2, LIMITE_BAIXO_TARTARUGA, -3, 0)
 //T -> t (Corrigir) (OK?)
 //Colocar os Testes (OK?)
 function moveT(tuga: Tartaruga): Tartaruga {
-    if (tuga.x > LIMITE_DIREITA_TARTARUGA) {
+    if (tuga.x > tuga.limiteDireito) {
         return { ...tuga, x: LIMITE_DIREITA_TARTARUGA, dx: -tuga.dx }
     } //... -> copia o objeto que vc quer copiar, e tudo o que vem depois da vírgula é o que você quer modificar
     if (tuga.x < LIMITE_ESQUERDA_TARTARUGA) {
@@ -148,3 +235,5 @@ function main() {
 }
 
 main()  // LEMBRAR: ALTERAR PATH DO SCRIPT NO index.html
+
+//linha 20 -> Resolver problema
