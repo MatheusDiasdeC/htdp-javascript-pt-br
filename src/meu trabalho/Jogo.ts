@@ -76,14 +76,7 @@ const D_PADRAO = 3
 //-- Interfaces --
 
 //Definição de Dados
-interface Jogo {
-    tart: Personagem,
-    caras: Personagem[],
-    gaivas: Personagem[],
-    itensVida: ItemVida[],
-    blocos: Bloco[],
-    vidas: number
-}
+
 
 //interface genérica para todos os personagens. Vai substituitir todas as coisas que se movem.
 interface Personagem {
@@ -160,6 +153,7 @@ interface ItemVida {
     y: number
 }
 
+const ItemVida1 = {x: ALTURA/2, y: LARGURA/2}
 //-----------------------------------------------------------------------------------------------------------
 
 //Cria um "objeto" T (Tartaruga), C (Caranguejo) e G (Gaivota)
@@ -176,7 +170,7 @@ function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem
 }
 
 function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personagem {
-    return { x: x,
+    return {x: x,
             y: y,
             dx: dx,
             dy: dy,
@@ -230,59 +224,101 @@ const TARTARUGA_VIRANDO = makeTartaruga(LIMITE_DIREITA_TARTARUGA, LIMITE_BAIXO_T
 const TARTARUGA_VOLTANDO = makeTartaruga(LARGURA / 2, LIMITE_BAIXO_TARTARUGA, -3, 0)
 
 //Movimento de C ao chegar no final
-////const CARANGUEJO_FIM = makeCaranguejo(LIMITE_DIREITA_TARTARUGA + 1, LIMITE_BAIXO_TARTARUGA, 3, 0)
+const CARANGUEJO_FIM = makeCaranguejo(LIMITE_BAIXO_CARANGUEJO + 1, LIMITE_BAIXO_TARTARUGA, 3, 0)
 //o QUE É ISSO? ^
 
+interface Jogo {
+    tart: Personagem,
+    caras: Personagem[],
+    gaivas: Personagem[],
+    itensVida: ItemVida[],
+    blocos: Bloco[],
+    vidas: number
+}
+
+// function makeJogo(tart: Personagem, caras: Personagem[], gaivas: Personagem[], itensVida: ItemVida[], blocos: Bloco[], vidas: number){
+//     return {tart: Personagem,
+//             caras: Personagem[],
+//             gaivas: Personagem[],
+//             itensVida: ItemVida[],
+//             blocos: Bloco[],
+//             vidas: number;
+// }
+// }
+
+const EXEMPLO_JOGO = {
+    tart:TARTARUGA_INICIAL,
+    caras:[CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL],
+    gaivas:[GAIVOTA_01_INICIAL],
+    itensVida:[ItemVida1],
+    blocos:[],
+    vidas: 3
+}
+
+function atualizaJogo(game: Jogo): Jogo{
+    let tartMovido = movePersonagem(game.tart)
+    let carasMovidos = game.caras.map(movePersonagem)
+    let gaivasMovidas = game.gaivas.map(movePersonagem)
+
+    return{...game, tart: tartMovido, caras: carasMovidos, gaivas: gaivasMovidas}
+}
+
+//---------------------------------
 //Mover T
 
 //T -> t (Corrigir) (OK?)
 //Colocar os Testes (OK?)
-function moveT(tuga: Personagem): Personagem {
-    if (tuga.x > tuga.limiteDireito) {
-        return { ...tuga, x: LIMITE_DIREITA_TARTARUGA, dx: -tuga.dx }
+function movePersonagem(pessoa: Personagem): Personagem {
+    if (pessoa.x > pessoa.limiteDireito) {
+        return { ...pessoa, x: LIMITE_DIREITA_TARTARUGA, dx: -pessoa.dx }
     } //... -> copia o objeto que vc quer copiar, e tudo o que vem depois da vírgula é o que você quer modificar
-    if (tuga.x < LIMITE_ESQUERDA_TARTARUGA) {
-        return { ...tuga, x: LIMITE_ESQUERDA_TARTARUGA, dx: -tuga.dx }
+    if (pessoa.x < LIMITE_ESQUERDA_TARTARUGA) {
+        return { ...pessoa, x: LIMITE_ESQUERDA_TARTARUGA, dx: -pessoa.dx }
     }
-    if (tuga.y > LIMITE_BAIXO_TARTARUGA) {
-        return { ...tuga, y: LIMITE_BAIXO_TARTARUGA, dy: -tuga.dy }
+    if (pessoa.y > LIMITE_BAIXO_TARTARUGA) {
+        return { ...pessoa, y: LIMITE_BAIXO_TARTARUGA, dy: -pessoa.dy }
     }
-    if (tuga.y < LIMITE_CIMA_TARTARUGA) {
-        return { ...tuga, y: LIMITE_CIMA_TARTARUGA, dy: -tuga.dy }
+    if (pessoa.y < LIMITE_CIMA_TARTARUGA) {
+        return { ...pessoa, y: LIMITE_CIMA_TARTARUGA, dy: -pessoa.dy }
     }
-    return { ...tuga, x: tuga.x + tuga.dx, y: tuga.y + tuga.dy }
+    return { ...pessoa, x: pessoa.x + pessoa.dx, y: pessoa.y + pessoa.dy }
 }
 
 testes(() => {
     describe('testes de moveT', () => {
             test('move vaca inicial', () => {
-                expect(moveT(TARTARUGA0)).toStrictEqual(TARTARUGA1);
+                expect(movePersonagem(TARTARUGA0)).toStrictEqual(TARTARUGA1);
             });
             test('move vaca limite direito', () => {
-                expect(moveT(TARTARUGA_FIM)).toStrictEqual(TARTARUGA_VIRANDO);
+                expect(movePersonagem(TARTARUGA_FIM)).toStrictEqual(TARTARUGA_VIRANDO);
             });
             test('move vaca limite esquerdo', () => {
-                expect(moveT(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA - 1, ALTURA / 2, -3, 0)))
+                expect(movePersonagem(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA - 1, ALTURA / 2, -3, 0)))
                     .toStrictEqual(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, ALTURA / 2, 3, 0));
             });
             test('move vaca limite baixo', () => {
-                expect(moveT(makeTartaruga(LARGURA / 2, LIMITE_BAIXO_TARTARUGA+1, 0, 3)))
+                expect(movePersonagem(makeTartaruga(LARGURA / 2, LIMITE_BAIXO_TARTARUGA+1, 0, 3)))
                     .toStrictEqual(makeTartaruga(LARGURA/2, LIMITE_BAIXO_TARTARUGA, 0, -3));
             });
             test('move vaca limite cima', () => {
-                expect(moveT(makeTartaruga(LARGURA/2, LIMITE_CIMA_TARTARUGA-1, 0, -3)))
+                expect(movePersonagem(makeTartaruga(LARGURA/2, LIMITE_CIMA_TARTARUGA-1, 0, -3)))
                     .toStrictEqual(makeTartaruga(LARGURA/2, LIMITE_CIMA_TARTARUGA, 0, 3));
             });
         });
 })
 
-function desenhaT(tuga: Personagem): Imagem {
-    return colocarImagem(tuga.dx < 0? IMG_TARTARUGA_OESTE: IMG_TARTARUGA_LESTE, tuga.x, tuga.y, TELA);
+function desenhaTartaruga(pessoa: Personagem): Imagem{
+
+    //return colocarImagem(...pessoa, x: IMG_TARTARUGA_OESTE, y:)
+}
+
+function desenhaJogo(game: Jogo): Imagem {
+    return colocarImagem(game.dx < 0? IMG_TARTARUGA_OESTE: IMG_TARTARUGA_LESTE, game.x, game.y, TELA);
 }
 testes(() => {
     describe('testes de desenhaT', () => {
         test('desenha vaca inicial', () => {
-            expect(desenhaT(TARTARUGA0))
+            expect(desenhaJogo(TARTARUGA0))
                 .toStrictEqual(colocarImagem(IMG_TARTARUGA_LESTE, TARTARUGA0.x, TARTARUGA0.y, TELA));
         });
     });
@@ -310,10 +346,10 @@ function trataTeclaTartaruga(tuga: Personagem, tecla: string): Personagem {
 
 
 function main() {
-    reactor(TARTARUGA_INICIAL,
+    reactor(EXEMPLO_JOGO,
         {
-            aCadaTick: moveT,
-            desenhar: desenhaT,
+            aCadaTick: atualizaJogo,
+            desenhar: desenhaJogo,
             quandoTecla: trataTeclaTartaruga,
         })
 }
