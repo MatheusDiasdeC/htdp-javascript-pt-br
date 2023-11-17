@@ -5,7 +5,7 @@ import imgGaivotaUrl from "./Gaivota.png";
 import imgCoracaoUrl from "./Coracao.png";
 
 //Criação da Tela
-export const [LARGURA, ALTURA] = [900, 600]
+export const [LARGURA, ALTURA] = [1000, 600]
 export const TELA = cenaVazia(LARGURA, ALTURA)
 
 //-----------------------------------------------------------------------------------------------------------
@@ -44,16 +44,16 @@ export const LIMITE_BAIXO_TARTARUGA = ALTURA - larguraImagem(IMG_TARTARUGA_LESTE
 export const LIMITE_CIMA_TARTARUGA = 0 + larguraImagem(IMG_TARTARUGA_LESTE) / 2
 
 //Limites dos Caranguejos
-export const LIMITE_ESQUERDA_CARANGUEJO = 0 + larguraImagem(IMG_CARANGUEJO) / 2
-export const LIMITE_DIREITA_CARANGUEJO = LARGURA - larguraImagem(IMG_CARANGUEJO) / 2
-export const LIMITE_BAIXO_CARANGUEJO = ALTURA - larguraImagem(IMG_CARANGUEJO) / 2
-export const LIMITE_CIMA_CARANGUEJO = 0 + larguraImagem(IMG_CARANGUEJO) / 2
+export const LIMITE_ESQUERDA_CARANGUEJO = 100 + larguraImagem(IMG_CARANGUEJO)
+export const LIMITE_DIREITA_CARANGUEJO = LARGURA - 2 * (larguraImagem(IMG_CARANGUEJO))
+export const LIMITE_BAIXO_CARANGUEJO = ALTURA - 2 * (larguraImagem(IMG_CARANGUEJO))
+export const LIMITE_CIMA_CARANGUEJO = 0 + larguraImagem(IMG_CARANGUEJO)
 
 //Limites das Gaivotas
 export const LIMITE_ESQUERDA_GAIVOTA = 0 + larguraImagem(IMG_GAIVOTA_LESTE) / 2
 export const LIMITE_DIREITA_GAIVOTA = LARGURA - larguraImagem(IMG_GAIVOTA_LESTE) / 2
-export const LIMITE_BAIXO_GAIVOTA = ALTURA - larguraImagem(IMG_GAIVOTA_LESTE) / 2
-export const LIMITE_CIMA_GAIVOTA = 0 + larguraImagem(IMG_GAIVOTA_LESTE) / 2
+export const LIMITE_BAIXO_GAIVOTA = ALTURA - 2 * (larguraImagem(IMG_GAIVOTA_LESTE))
+export const LIMITE_CIMA_GAIVOTA = 0 + larguraImagem(IMG_GAIVOTA_LESTE)
 
 //Velocidade Inicial
 export const D_PADRAO = 3

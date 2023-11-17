@@ -1,8 +1,8 @@
-import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImagem } from "../../lib/image"
+import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImagem, sobrepor } from "../../lib/image"
 import { reactor } from "../../lib/universe";
 import { testes } from "../../lib/utils";
 import { ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
-import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL, GAIVOTA_01_INICIAL, TARTARUGA_INICIAL, movePersonagem } from "./Personagens";
+import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL, GAIVOTA_01_INICIAL, Personagem, TARTARUGA_INICIAL, desenhaCaranguejos, desenhaGaivotas, desenhaTartaruga, movePersonagem } from "./Personagens";
 
 
 //Coisas para fazer o trabalho funcionar:
@@ -13,7 +13,7 @@ import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL, GA
 
 //--Constantes de Posição--
 //Ver Imagem na Tela (Teste)
-IMG_CARANGUEJO.desenha()
+//IMG_CARANGUEJO.desenha()
 
 //-----------------------------------------------------------------------------------------------------------
 //-- Interfaces --
@@ -37,7 +37,7 @@ interface ItemVida {
 const ItemVida1 = {x: ALTURA/2, y: LARGURA/2}
 //-----------------------------------------------------------------------------------------------------------
 
-interface Jogo {
+export interface Jogo {
     tart: Personagem,
     caras: Personagem[],
     gaivas: Personagem[],
@@ -58,7 +58,7 @@ interface Jogo {
 
 export const EXEMPLO_JOGO = {
     tart:TARTARUGA_INICIAL,
-    caras:[CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL],
+    caras:[CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL/*, CARANGUEJO_03_INICIAL*/],
     gaivas:[GAIVOTA_01_INICIAL],
     itensVida:[ItemVida1],
     blocos:[],
@@ -76,7 +76,19 @@ export function atualizaJogo(game: Jogo): Jogo{
 //---------------------------------
 
 export function desenhaJogo(game: Jogo): Imagem {
-    return colocarImagem(game.dx < 0? IMG_TARTARUGA_OESTE: IMG_TARTARUGA_LESTE, game.x, game.y, TELA);
+    
+    let layerTartaruga = colocarImagem(desenhaTartaruga(game.tart), LARGURA/2, ALTURA/2, TELA)
+    let layerCaranguejos = colocarImagem(desenhaCaranguejos(game.caras), LARGURA/2, ALTURA/2, layerTartaruga)
+    let layerGaivotas = colocarImagem(desenhaGaivotas(game.gaivas), LARGURA/2, ALTURA/2, layerCaranguejos)
+    return layerGaivotas
+    //Está quebrado por que as coisas mudaram
+    //return colocarImagem(game.dx < 0? IMG_TARTARUGA_OESTE: IMG_TARTARUGA_LESTE, game.x, game.y, TELA);
 }
 
 //-----------------------------------------------------------------------------------------------------------
+
+
+export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
+    //Temporário
+    return game
+}

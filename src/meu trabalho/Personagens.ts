@@ -1,16 +1,17 @@
-import { Imagem, colocarImagem } from "../../lib/image";
+import { Imagem, colocarImagem, folhaTransparente, larguraImagem } from "../../lib/image";
 import { testes } from "../../lib/utils";
-import {ALTURA, D_PADRAO, IMG_TARTARUGA_LESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, 
+import {ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_GAIVOTA_OESTE, IMG_TARTARUGA_LESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, 
         LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO,
         LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA,
         LIMITE_ESQUERDA_TARTARUGA, 
+        TELA, 
         Y_INICIAL_CARANGUEJO, 
         Y_INICIAL_GAIVOTA, 
         Y_INICIAL_TARTARUGA} from "./Constantes";
-import { desenhaJogo } from "./Jogo";
+import { desenhaJogo, Jogo } from "./Jogo";
 
 //interface genérica para todos os personagens. Vai substituitir todas as coisas que se movem.
-interface Personagem {
+export interface Personagem {
     x: number,
     y: number,
     dx: number,
@@ -125,8 +126,11 @@ export const Caranguejo_01_POSTERIOR = makeCaranguejo(2 * (LARGURA / 5) + D_PADR
 export const CARANGUEJO_02_INICIAL = makeCaranguejo(3 * (LARGURA / 5), Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
 export const Caranguejo_02_POSTERIOR = makeCaranguejo(3 * (LARGURA / 5) + D_PADRAO, Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
 
-export const CARANGUEJO_03_INICIAL = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)
-export const Caranguejo_03_POSTERIOR = makeCaranguejo(LARGURA / 5 + D_PADRAO, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)
+/*export const CARANGUEJO_03_INICIAL = {x: LARGURA / 5, y: Y_INICIAL_CARANGUEJO, dx: D_PADRAO, dy: 0,
+                                      limiteCima: LIMITE_CIMA_CARANGUEJO, limiteBaixo: ALTURA - larguraImagem(IMG_CARANGUEJO) / 2,
+                                      limiteEsquerdo: LIMITE_ESQUERDA_CARANGUEJO, limiteDireito: LIMITE_DIREITA_CARANGUEJO}
+    //makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)
+export const Caranguejo_03_POSTERIOR = makeCaranguejo(LARGURA / 5 + D_PADRAO, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)*/
 
 //Posições Iniciais de G
 export const GAIVOTA_01_INICIAL = makeGaivota(4* (LARGURA / 5), Y_INICIAL_GAIVOTA, 0, D_PADRAO)
@@ -161,16 +165,16 @@ export const CARANGUEJO_03_RETORNO = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARAN
 //Colocar os Testes (OK?)
 export function movePersonagem(pessoa: Personagem): Personagem {
     if (pessoa.x > pessoa.limiteDireito) {
-        return { ...pessoa, x: LIMITE_DIREITA_TARTARUGA, dx: -pessoa.dx }
+        return { ...pessoa, x: pessoa.limiteDireito, dx: -pessoa.dx }
     } //... -> copia o objeto que vc quer copiar, e tudo o que vem depois da vírgula é o que você quer modificar
-    if (pessoa.x < LIMITE_ESQUERDA_TARTARUGA) {
-        return { ...pessoa, x: LIMITE_ESQUERDA_TARTARUGA, dx: -pessoa.dx }
+    if (pessoa.x < pessoa.limiteEsquerdo) {
+        return { ...pessoa, x: pessoa.limiteEsquerdo, dx: -pessoa.dx }
     }
-    if (pessoa.y > LIMITE_BAIXO_TARTARUGA) {
-        return { ...pessoa, y: LIMITE_BAIXO_TARTARUGA, dy: -pessoa.dy }
+    if (pessoa.y > pessoa.limiteBaixo) {
+        return { ...pessoa, y: pessoa.limiteBaixo, dy: -pessoa.dy }
     }
-    if (pessoa.y < LIMITE_CIMA_TARTARUGA) {
-        return { ...pessoa, y: LIMITE_CIMA_TARTARUGA, dy: -pessoa.dy }
+    if (pessoa.y < pessoa.limiteCima) {
+        return { ...pessoa, y: pessoa.limiteCima, dy: -pessoa.dy }
     }
     return { ...pessoa, x: pessoa.x + pessoa.dx, y: pessoa.y + pessoa.dy }
 }
@@ -198,11 +202,36 @@ testes(() => {
         });
 })
 
-function desenhaTartaruga(pessoa: Personagem): Imagem{
+export function desenhaTartaruga(pessoa: Personagem): Imagem{
 
-    //return colocarImagem(...pessoa, x: IMG_TARTARUGA_OESTE, y:)
+    let folha = folhaTransparente(LARGURA, ALTURA)
+    return colocarImagem(IMG_TARTARUGA_LESTE, pessoa.x, pessoa.y, folha)
 }
 
+export function desenhaCaranguejos(pessoa: Personagem[]): Imagem{
+
+    let folha = folhaTransparente(LARGURA, ALTURA)
+
+    for (let cc of pessoa){
+
+        folha = colocarImagem(IMG_CARANGUEJO, cc.x, cc.y, folha)
+    }
+
+    return folha
+    //colocarImagem(IMG_CARANGUEJO, pessoa.x, pessoa.y, folha)
+}
+
+export function desenhaGaivotas(pessoa: Personagem[]): Imagem{
+
+    let folha = folhaTransparente(LARGURA, ALTURA)
+
+    for (let cc of pessoa){
+
+        folha = colocarImagem(IMG_GAIVOTA_OESTE, cc.x, cc.y, folha)
+    }
+
+    return folha
+}
 
 testes(() => {
     describe('testes de desenhaT', () => {

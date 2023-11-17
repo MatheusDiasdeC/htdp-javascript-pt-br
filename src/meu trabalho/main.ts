@@ -7,6 +7,7 @@ function main() {
             aCadaTick: atualizaJogo,
             desenhar: desenhaJogo,
             quandoTecla: trataTeclaJogo,
+            modoDebug: true
         })
 }
 
