@@ -1,4 +1,4 @@
-import { Imagem, colocarImagem, folhaTransparente, larguraImagem } from "../../lib/image";
+import { Imagem, colocarImagem, folhaTransparente, larguraImagem, rotacionar } from "../../lib/image";
 import { testes } from "../../lib/utils";
 import {ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_GAIVOTA_OESTE, IMG_TARTARUGA_LESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, 
         LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO,
@@ -112,7 +112,7 @@ function makeGaivota(x: number, y: number, dx: number, dy: number): Personagem {
 }
 
 //Posições Iniciais de T
-export const TARTARUGA_INICIAL = makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, D_PADRAO, 0)
+export const TARTARUGA_INICIAL = makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 0, 0)
     //Após 1 Tic
 export const TARTARUGA_INICIAL2 = makeTartaruga(LIMITE_ESQUERDA_TARTARUGA + D_PADRAO, Y_INICIAL_TARTARUGA, D_PADRAO, 0)
 
@@ -120,10 +120,10 @@ export const TARTARUGA0 = makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TAR
 export const TARTARUGA1 = makeTartaruga(LIMITE_ESQUERDA_TARTARUGA + 3, Y_INICIAL_TARTARUGA + 4, 3, 4)
 
 //Posições Iniciais de C
-export const CARANGUEJO_01_INICIAL = makeCaranguejo(2 * (LARGURA / 5), Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
+export const CARANGUEJO_01_INICIAL = makeCaranguejo(250 + larguraImagem(IMG_CARANGUEJO), Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
 export const Caranguejo_01_POSTERIOR = makeCaranguejo(2 * (LARGURA / 5) + D_PADRAO, Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
 
-export const CARANGUEJO_02_INICIAL = makeCaranguejo(3 * (LARGURA / 5), Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
+export const CARANGUEJO_02_INICIAL = makeCaranguejo(450 + larguraImagem(IMG_CARANGUEJO), Y_INICIAL_CARANGUEJO - 400, 0, D_PADRAO)
 export const Caranguejo_02_POSTERIOR = makeCaranguejo(3 * (LARGURA / 5) + D_PADRAO, Y_INICIAL_CARANGUEJO, 0, D_PADRAO)
 
 /*export const CARANGUEJO_03_INICIAL = {x: LARGURA / 5, y: Y_INICIAL_CARANGUEJO, dx: D_PADRAO, dy: 0,
@@ -205,7 +205,11 @@ testes(() => {
 export function desenhaTartaruga(pessoa: Personagem): Imagem{
 
     let folha = folhaTransparente(LARGURA, ALTURA)
-    return colocarImagem(IMG_TARTARUGA_LESTE, pessoa.x, pessoa.y, folha)
+    let angulo = Math.atan2(pessoa.dy , pessoa.dx)
+    angulo  = angulo * (180/Math.PI)
+
+    let imagemRotacionda = rotacionar(IMG_TARTARUGA_LESTE, angulo)
+    return colocarImagem(imagemRotacionda, pessoa.x, pessoa.y, folha)
 }
 
 export function desenhaCaranguejos(pessoa: Personagem[]): Imagem{
@@ -219,6 +223,20 @@ export function desenhaCaranguejos(pessoa: Personagem[]): Imagem{
 
     return folha
     //colocarImagem(IMG_CARANGUEJO, pessoa.x, pessoa.y, folha)
+}
+
+export function giraGaivota(pessoa: Personagem): Personagem{
+
+    let angulo = Math.atan2(pessoa.dy , pessoa.dx)
+    //angulo  = angulo * (180/Math.PI)
+
+    angulo = angulo + 0.0175
+
+
+    let novoDy = D_PADRAO * Math.sin(angulo)
+    let novoDx = D_PADRAO * Math.cos(angulo)
+
+    return {...pessoa, dx : novoDx, dy : novoDy}
 }
 
 export function desenhaGaivotas(pessoa: Personagem[]): Imagem{

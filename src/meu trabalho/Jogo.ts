@@ -2,7 +2,7 @@ import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImag
 import { reactor } from "../../lib/universe";
 import { testes } from "../../lib/utils";
 import { ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
-import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, CARANGUEJO_03_INICIAL, GAIVOTA_01_INICIAL, Personagem, TARTARUGA_INICIAL, desenhaCaranguejos, desenhaGaivotas, desenhaTartaruga, movePersonagem } from "./Personagens";
+import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, /*CARANGUEJO_03_INICIAL,*/ GAIVOTA_01_INICIAL, Personagem, TARTARUGA_INICIAL, desenhaCaranguejos, desenhaGaivotas, desenhaTartaruga, giraGaivota, movePersonagem } from "./Personagens";
 
 
 //Coisas para fazer o trabalho funcionar:
@@ -68,7 +68,8 @@ export const EXEMPLO_JOGO = {
 export function atualizaJogo(game: Jogo): Jogo{
     let tartMovido = movePersonagem(game.tart)
     let carasMovidos = game.caras.map(movePersonagem)
-    let gaivasMovidas = game.gaivas.map(movePersonagem)
+    let gaivotasGiradas = game.gaivas.map(giraGaivota)
+    let gaivasMovidas = gaivotasGiradas.map(movePersonagem)
 
     return{...game, tart: tartMovido, caras: carasMovidos, gaivas: gaivasMovidas}
 }
@@ -89,6 +90,34 @@ export function desenhaJogo(game: Jogo): Imagem {
 
 
 export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
-    //Temporário
+    if (tecla == "ArrowRight"){
+        return {...game, tart:{...game.tart, dx: D_PADRAO}}
+    }
+
+    if (tecla == "ArrowLeft"){
+        return {...game, tart:{...game.tart, dx: -D_PADRAO}}
+    }
+
+    if (tecla == "ArrowUp"){
+        return {...game, tart:{...game.tart, dy: -D_PADRAO}}
+    }
+
+    if (tecla == "ArrowDown"){
+        return {...game, tart:{...game.tart, dy: D_PADRAO}}
+    }
+
     return game
+}
+
+export function trataSoltaTeclaJogo(game: Jogo, tecla: String): Jogo {
+    if (tecla == "ArrowRight" || tecla == "ArrowLeft"){
+        return {...game, tart:{...game.tart, dx: 0}}
+    }
+
+    if (tecla == "ArrowUp" || tecla == "ArrowDown"){
+        return {...game, tart:{...game.tart, dy: 0}}
+    }
+
+    //return {...game, tart:{...game.tart, dx: 0, dy:0}}
+  
 }

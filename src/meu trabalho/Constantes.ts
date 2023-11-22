@@ -5,7 +5,7 @@ import imgGaivotaUrl from "./Gaivota.png";
 import imgCoracaoUrl from "./Coracao.png";
 
 //Criação da Tela
-export const [LARGURA, ALTURA] = [1000, 600]
+export const [LARGURA, ALTURA] = [1400, 600]
 export const TELA = cenaVazia(LARGURA, ALTURA)
 
 //-----------------------------------------------------------------------------------------------------------

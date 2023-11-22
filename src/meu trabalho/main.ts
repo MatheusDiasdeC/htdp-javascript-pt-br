@@ -1,5 +1,5 @@
 import { reactor } from "../../lib/universe"
-import {EXEMPLO_JOGO, atualizaJogo, desenhaJogo, trataTeclaJogo} from "./Jogo"
+import {EXEMPLO_JOGO, atualizaJogo, desenhaJogo, trataSoltaTeclaJogo, trataTeclaJogo} from "./Jogo"
 
 function main() {
     reactor(EXEMPLO_JOGO,
@@ -7,7 +7,8 @@ function main() {
             aCadaTick: atualizaJogo,
             desenhar: desenhaJogo,
             quandoTecla: trataTeclaJogo,
-            modoDebug: true
+            quandoSoltaTecla: trataSoltaTeclaJogo,
+            modoDebug: false
         })
 }
 
