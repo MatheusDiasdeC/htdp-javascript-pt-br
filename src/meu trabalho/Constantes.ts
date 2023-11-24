@@ -35,7 +35,7 @@ export const Y_INICIAL_TARTARUGA = ALTURA / 2
 export const Y_INICIAL_CARANGUEJO = 4 * (ALTURA / 5)
 
 //Altura Inicial de Gaivota
-export const Y_INICIAL_GAIVOTA = 4 * (ALTURA / 5)
+export const Y_INICIAL_GAIVOTA = 2.2 * (ALTURA / 5)
 
 //Limites da Tartaruga
 export const LIMITE_ESQUERDA_TARTARUGA = 0 + larguraImagem(IMG_TARTARUGA_LESTE) / 2
@@ -58,3 +58,7 @@ export const LIMITE_CIMA_GAIVOTA = 0 + larguraImagem(IMG_GAIVOTA_LESTE)
 //Velocidade Inicial
 export const D_PADRAO = 3
 
+//Ângulo da Gaivota -> Quanto maior, menor o raio
+export const GIRO = 1.25
+
+larguraImagem(IMG_TARTARUGA_LESTE) 

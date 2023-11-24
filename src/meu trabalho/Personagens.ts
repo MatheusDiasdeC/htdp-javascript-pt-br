@@ -1,6 +1,6 @@
-import { Imagem, colocarImagem, folhaTransparente, larguraImagem, rotacionar } from "../../lib/image";
+import { Imagem, alturaImagem, colocarImagem, folhaTransparente, larguraImagem, rotacionar } from "../../lib/image";
 import { testes } from "../../lib/utils";
-import {ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_GAIVOTA_OESTE, IMG_TARTARUGA_LESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, 
+import {ALTURA, D_PADRAO, GIRO, IMG_CARANGUEJO, IMG_GAIVOTA_LESTE, IMG_GAIVOTA_OESTE, IMG_TARTARUGA_LESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, 
         LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO,
         LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA,
         LIMITE_ESQUERDA_TARTARUGA, 
@@ -20,7 +20,9 @@ export interface Personagem {
     limiteCima: number,
     limiteBaixo: number,
     limiteEsquerdo: number,
-    limiteDireito: number
+    limiteDireito: number,
+
+    raioDeColisão: number
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -84,7 +86,10 @@ function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem
             limiteCima: LIMITE_CIMA_TARTARUGA,
             limiteBaixo: LIMITE_BAIXO_TARTARUGA,
             limiteEsquerdo: LIMITE_ESQUERDA_TARTARUGA,
-            limiteDireito: LIMITE_DIREITA_TARTARUGA};
+            limiteDireito: LIMITE_DIREITA_TARTARUGA,
+            
+            raioDeColisão: (alturaImagem(IMG_TARTARUGA_LESTE) + larguraImagem(IMG_TARTARUGA_LESTE)) / 2 / 3
+    }
 }
 
 function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personagem {
@@ -96,7 +101,10 @@ function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personage
             limiteCima: LIMITE_CIMA_CARANGUEJO,
             limiteBaixo: LIMITE_BAIXO_CARANGUEJO,
             limiteEsquerdo: LIMITE_ESQUERDA_CARANGUEJO,
-            limiteDireito: LIMITE_DIREITA_CARANGUEJO};
+            limiteDireito: LIMITE_DIREITA_CARANGUEJO,
+
+            raioDeColisão: (alturaImagem(IMG_CARANGUEJO) + larguraImagem(IMG_CARANGUEJO)) / 2 / 3
+    }
 }
 
 function makeGaivota(x: number, y: number, dx: number, dy: number): Personagem {
@@ -108,7 +116,10 @@ function makeGaivota(x: number, y: number, dx: number, dy: number): Personagem {
             limiteCima: LIMITE_CIMA_GAIVOTA,
             limiteBaixo: LIMITE_BAIXO_GAIVOTA,
             limiteEsquerdo: LIMITE_ESQUERDA_GAIVOTA,
-            limiteDireito: LIMITE_DIREITA_GAIVOTA};
+            limiteDireito: LIMITE_DIREITA_GAIVOTA,
+
+            raioDeColisão: (alturaImagem(IMG_GAIVOTA_LESTE) + larguraImagem(IMG_GAIVOTA_LESTE)) / 2 / 3
+    }
 }
 
 //Posições Iniciais de T
@@ -133,7 +144,7 @@ export const Caranguejo_02_POSTERIOR = makeCaranguejo(3 * (LARGURA / 5) + D_PADR
 export const Caranguejo_03_POSTERIOR = makeCaranguejo(LARGURA / 5 + D_PADRAO, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)*/
 
 //Posições Iniciais de G
-export const GAIVOTA_01_INICIAL = makeGaivota(4* (LARGURA / 5), Y_INICIAL_GAIVOTA, 0, D_PADRAO)
+export const GAIVOTA_01_INICIAL = makeGaivota(2.8 * (LARGURA / 5), Y_INICIAL_GAIVOTA, 0, D_PADRAO)
 export const GAIVOTA_01_POSTERIOR = makeGaivota(4 * (LARGURA / 5) + D_PADRAO, Y_INICIAL_GAIVOTA, 0, D_PADRAO)
 
 
@@ -230,7 +241,7 @@ export function giraGaivota(pessoa: Personagem): Personagem{
     let angulo = Math.atan2(pessoa.dy , pessoa.dx)
     //angulo  = angulo * (180/Math.PI)
 
-    angulo = angulo + 0.0175
+    angulo = angulo - GIRO * (0.0175)
 
 
     let novoDy = D_PADRAO * Math.sin(angulo)

@@ -1,8 +1,10 @@
-import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImagem, sobrepor } from "../../lib/image"
+import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImagem, sobrepor, texto } from "../../lib/image"
 import { reactor } from "../../lib/universe";
 import { testes } from "../../lib/utils";
-import { ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
+import { ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_CORACAO, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
 import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, /*CARANGUEJO_03_INICIAL,*/ GAIVOTA_01_INICIAL, Personagem, TARTARUGA_INICIAL, desenhaCaranguejos, desenhaGaivotas, desenhaTartaruga, giraGaivota, movePersonagem } from "./Personagens";
+import { distancia } from "./Utilidades";
+
 
 
 //Coisas para fazer o trabalho funcionar:
@@ -43,7 +45,11 @@ export interface Jogo {
     gaivas: Personagem[],
     itensVida: ItemVida[],
     blocos: Bloco[],
-    vidas: number
+    vidas: number,
+
+    gameOver: boolean,
+    objetivo: number,
+    vitoria: boolean
 }
 
 // function makeJogo(tart: Personagem, caras: Personagem[], gaivas: Personagem[], itensVida: ItemVida[], blocos: Bloco[], vidas: number){
@@ -62,14 +68,42 @@ export const EXEMPLO_JOGO = {
     gaivas:[GAIVOTA_01_INICIAL],
     itensVida:[ItemVida1],
     blocos:[],
-    vidas: 3
+    vidas: 3,
+
+    gameOver: false,
+    objetivo: LARGURA * 0.9,
+    vitoria: false
+}
+
+export function colidindo(tart: Personagem, inimigo: Personagem): boolean {
+    let distanciaVacaCc = distancia(tart.x, tart.y, inimigo.x, inimigo.y);
+    return distanciaVacaCc < (tart.raioDeColisão + inimigo.raioDeColisão) * 1.5;
 }
 
 export function atualizaJogo(game: Jogo): Jogo{
+    
+    function colidindoComAlgum(tart: Personagem, inimigos: Personagem[]): boolean {
+        return inimigos.some((inimigo) => colidindo(tart, inimigo));
+      }
+      
+    if (colidindoComAlgum(game.tart, game.gaivas) || colidindoComAlgum(game.tart, game.caras)) {
+
+        if (game.vidas == 1) {
+            return { ...game, gameOver: true};
+        }
+
+        return { ...game, vidas: game.vidas - 1, tart: TARTARUGA_INICIAL};
+      }
+    
+    if (game.tart.x >= game.objetivo) {
+        return {...game, vitoria: true}
+    }
     let tartMovido = movePersonagem(game.tart)
     let carasMovidos = game.caras.map(movePersonagem)
     let gaivotasGiradas = game.gaivas.map(giraGaivota)
     let gaivasMovidas = gaivotasGiradas.map(movePersonagem)
+
+   
 
     return{...game, tart: tartMovido, caras: carasMovidos, gaivas: gaivasMovidas}
 }
@@ -78,10 +112,24 @@ export function atualizaJogo(game: Jogo): Jogo{
 
 export function desenhaJogo(game: Jogo): Imagem {
     
-    let layerTartaruga = colocarImagem(desenhaTartaruga(game.tart), LARGURA/2, ALTURA/2, TELA)
-    let layerCaranguejos = colocarImagem(desenhaCaranguejos(game.caras), LARGURA/2, ALTURA/2, layerTartaruga)
-    let layerGaivotas = colocarImagem(desenhaGaivotas(game.gaivas), LARGURA/2, ALTURA/2, layerCaranguejos)
-    return layerGaivotas
+    if (game.gameOver){
+        let imagem = colocarImagem(texto("Perdeu!", "Arial", "30px"), LARGURA/2, ALTURA/2, TELA)
+        return imagem
+    }
+
+    if (game.vitoria){
+        let imagem = colocarImagem(texto("Ganhste!", "Arial", "30px"), LARGURA/2, ALTURA/2, TELA)
+        return imagem
+    }
+
+    let imagem = colocarImagem(desenhaTartaruga(game.tart), LARGURA/2, ALTURA/2, TELA)
+    imagem = colocarImagem(desenhaCaranguejos(game.caras), LARGURA/2, ALTURA/2, imagem)
+    imagem = colocarImagem(desenhaGaivotas(game.gaivas), LARGURA/2, ALTURA/2, imagem)
+
+    for (let i = 0; i < game.vidas; i++){
+        imagem = colocarImagem(IMG_CORACAO, 50 + (i * larguraImagem(IMG_CORACAO)), 40, imagem)
+    }
+    return imagem
     //Está quebrado por que as coisas mudaram
     //return colocarImagem(game.dx < 0? IMG_TARTARUGA_OESTE: IMG_TARTARUGA_LESTE, game.x, game.y, TELA);
 }
