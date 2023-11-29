@@ -1,5 +1,5 @@
 import { testes } from "../../lib/utils";
-import { ALTURA, GIRO, LARGURA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_TARTARUGA, LIMITE_ESQUERDA_TARTARUGA } from "./Constantes";
+import { ALTURA, D_PADRAO, GIRO, LARGURA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_TARTARUGA, LIMITE_ESQUERDA_TARTARUGA } from "./Constantes";
 import { TARTARUGA0, TARTARUGA1, TARTARUGA_FIM, TARTARUGA_VIRANDO, makeTartaruga, makeGaivota, movePersonagem, GAIVOTA_01_INICIAL, giraGaivota } from "./Personagens";
 import { distancia } from "./Utilidades";
 
@@ -50,8 +50,8 @@ testes(() => {
             angulo = angulo - GIRO * (0.0175)
 
 
-            let novoDy = dy * Math.sin(angulo)
-            let novoDx = dx * Math.cos(angulo)
+            let novoDy = D_PADRAO * Math.sin(angulo)
+            let novoDx = D_PADRAO * Math.cos(angulo)
 
             expect(giraGaivota(makeGaivota(50, 50, dx, dy))).toStrictEqual(makeGaivota(50, 50, novoDx, novoDy))
         })

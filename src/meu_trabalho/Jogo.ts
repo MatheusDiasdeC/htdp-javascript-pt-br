@@ -75,11 +75,13 @@ export const EXEMPLO_JOGO = {
     vitoria: false
 }
 
+//Teste
 export function colidindo(tart: Personagem, inimigo: Personagem): boolean {
     let distanciaVacaCc = distancia(tart.x, tart.y, inimigo.x, inimigo.y);
     return distanciaVacaCc < (tart.raioDeColisão + inimigo.raioDeColisão) * 1.5;
 }
 
+//Teste
 export function atualizaJogo(game: Jogo): Jogo{
     
     function colidindoComAlgum(tart: Personagem, inimigos: Personagem[]): boolean {
@@ -136,7 +138,7 @@ export function desenhaJogo(game: Jogo): Imagem {
 
 //-----------------------------------------------------------------------------------------------------------
 
-
+//Teste
 export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
     if (tecla == "ArrowRight"){
         return {...game, tart:{...game.tart, dx: D_PADRAO}}
@@ -157,6 +159,7 @@ export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
     return game
 }
 
+//Teste
 export function trataSoltaTeclaJogo(game: Jogo, tecla: String): Jogo {
     if (tecla == "ArrowRight" || tecla == "ArrowLeft"){
         return {...game, tart:{...game.tart, dx: 0}}

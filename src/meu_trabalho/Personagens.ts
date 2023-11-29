@@ -233,7 +233,7 @@ export function desenhaGaivotas(pessoa: Personagem[]): Imagem{
     return folha
 }
 
-
+//Precisa Teste
 function trataTeclaTartaruga(tuga: Personagem, tecla: string): Personagem {
     if (tecla == "ArrowRight") {
         return {...tuga, dx: D_PADRAO, dy: 0}
