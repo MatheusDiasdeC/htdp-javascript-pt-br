@@ -1,7 +1,7 @@
 import { Imagem, carregarImagem, cenaVazia, colocarImagem, espelhar, larguraImagem, sobrepor, texto } from "../../lib/image"
 import { reactor } from "../../lib/universe";
 import { testes } from "../../lib/utils";
-import { ALTURA, D_PADRAO, IMG_CARANGUEJO, IMG_CORACAO, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
+import { ALTURA, D_PADRAO, FUNDO, IMG_CARANGUEJO, IMG_CORACAO, IMG_PRAIA, IMG_TARTARUGA_LESTE, IMG_TARTARUGA_OESTE, LARGURA, LIMITE_BAIXO_CARANGUEJO, LIMITE_BAIXO_GAIVOTA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_CARANGUEJO, LIMITE_CIMA_GAIVOTA, LIMITE_CIMA_TARTARUGA, LIMITE_DIREITA_CARANGUEJO, LIMITE_DIREITA_GAIVOTA, LIMITE_DIREITA_TARTARUGA, LIMITE_ESQUERDA_CARANGUEJO, LIMITE_ESQUERDA_GAIVOTA, LIMITE_ESQUERDA_TARTARUGA, TELA, Y_INICIAL_CARANGUEJO, Y_INICIAL_GAIVOTA, Y_INICIAL_TARTARUGA } from "./Constantes";
 import { CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL, /*CARANGUEJO_03_INICIAL,*/ GAIVOTA_01_INICIAL, Personagem, TARTARUGA_INICIAL, desenhaCaranguejos, desenhaGaivotas, desenhaTartaruga, giraGaivota, movePersonagem } from "./Personagens";
 import { distancia } from "./Utilidades";
 
@@ -16,7 +16,7 @@ import { distancia } from "./Utilidades";
 //--Constantes de Posição--
 //Ver Imagem na Tela (Teste)
 //IMG_CARANGUEJO.desenha()
-
+//IMG_PRAIA.desenha()
 //-----------------------------------------------------------------------------------------------------------
 //-- Interfaces --
 
@@ -71,7 +71,7 @@ export const EXEMPLO_JOGO = {
     vidas: 3,
 
     gameOver: false,
-    objetivo: LARGURA * 0.9,
+    objetivo: LARGURA * 0.7,
     vitoria: false
 }
 
@@ -113,16 +113,16 @@ export function atualizaJogo(game: Jogo): Jogo{
 export function desenhaJogo(game: Jogo): Imagem {
     
     if (game.gameOver){
-        let imagem = colocarImagem(texto("Perdeu!", "Arial", "30px"), LARGURA/2, ALTURA/2, TELA)
+        let imagem = colocarImagem(texto("Perdeu!", "Arial", "40px"), LARGURA/2, ALTURA/2, TELA)
         return imagem
     }
 
     if (game.vitoria){
-        let imagem = colocarImagem(texto("Ganhste!", "Arial", "30px"), LARGURA/2, ALTURA/2, TELA)
+        let imagem = colocarImagem(texto("Ganhaste!", "Arial", "40px"), LARGURA/2, ALTURA/2, TELA)
         return imagem
     }
 
-    let imagem = colocarImagem(desenhaTartaruga(game.tart), LARGURA/2, ALTURA/2, TELA)
+    let imagem = colocarImagem(desenhaTartaruga(game.tart), LARGURA/2, ALTURA/2, FUNDO)
     imagem = colocarImagem(desenhaCaranguejos(game.caras), LARGURA/2, ALTURA/2, imagem)
     imagem = colocarImagem(desenhaGaivotas(game.gaivas), LARGURA/2, ALTURA/2, imagem)
 

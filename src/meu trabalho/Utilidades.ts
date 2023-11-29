@@ -12,6 +12,7 @@ export function distancia(
 ): number {
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
+
 testes(() => {
   describe("testes distancia", () => {
     test("teste 1", () => {

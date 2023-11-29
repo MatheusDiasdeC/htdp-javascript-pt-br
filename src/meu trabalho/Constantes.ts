@@ -3,10 +3,13 @@ import imgTartarugaUrl from "./Tartaruga.png";
 import imgCaranguejoUrl from "./Caranguejo.png";
 import imgGaivotaUrl from "./Gaivota.png";
 import imgCoracaoUrl from "./Coracao.png";
+import imgPraia1 from "./Praia1.png";
+import imgPraia2 from "./Praia2.png";
 
 //Criação da Tela
 export const [LARGURA, ALTURA] = [1400, 600]
 export const TELA = cenaVazia(LARGURA, ALTURA)
+
 
 //-----------------------------------------------------------------------------------------------------------
 
@@ -25,6 +28,12 @@ export const IMG_GAIVOTA_LESTE = espelhar(IMG_GAIVOTA_OESTE)
 //Criar Coração
 export const  IMG_CORACAO = carregarImagem(imgCoracaoUrl, 100, 100)
 
+//Criar Praia
+export const IMG_PRAIA = carregarImagem(imgPraia1, 1400, 600)
+export const IMG_PRAIA_TRUE = espelhar(IMG_PRAIA)
+//export const IMG_PRAIA = carregarImagem(imgPraia2, 1400, 600)
+
+export const FUNDO = colocarImagem(IMG_PRAIA_TRUE, 700, 300, TELA)
 //-----------------------------------------------------------------------------------------------------------
 
 // -- Posição Inicial e Limites dos Personagens

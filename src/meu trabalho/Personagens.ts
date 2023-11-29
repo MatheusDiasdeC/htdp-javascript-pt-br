@@ -77,7 +77,7 @@ export const GAIVOTA_INICIAL = {
 
 //-----------------------------------------------------------------------------------------------------
 //Cria um "objeto" T (Tartaruga), C (Caranguejo) e G (Gaivota)
-function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem {
+export function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem {
     return { x: x,
             y: y,
             dx: dx,
@@ -92,7 +92,7 @@ function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem
     }
 }
 
-function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personagem {
+export function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personagem {
     return {x: x,
             y: y,
             dx: dx,
@@ -107,7 +107,7 @@ function makeCaranguejo(x: number, y: number, dx: number, dy: number): Personage
     }
 }
 
-function makeGaivota(x: number, y: number, dx: number, dy: number): Personagem {
+export function makeGaivota(x: number, y: number, dx: number, dy: number): Personagem {
     return { x: x,
             y: y,
             dx: dx,
@@ -156,9 +156,6 @@ export const TARTARUGA_FIM = makeTartaruga(LIMITE_DIREITA_TARTARUGA + 1, LIMITE_
 export const TARTARUGA_VIRANDO = makeTartaruga(LIMITE_DIREITA_TARTARUGA, LIMITE_BAIXO_TARTARUGA, -3, 0)
 export const TARTARUGA_VOLTANDO = makeTartaruga(LARGURA / 2, LIMITE_BAIXO_TARTARUGA, -3, 0)
 
-
-//Estou trabalhando AQUI!
-
 //Movimento de C ao chegar no final
 export const CARANGUEJO_VERTICAL_01_FIM = makeCaranguejo(2 * (LARGURA / 5), LIMITE_BAIXO_TARTARUGA, 3, 0)
 export const CARANGUEJO_VERTICAL_01_RETORNO = makeCaranguejo(2 * (LARGURA / 5), LIMITE_BAIXO_CARANGUEJO, 0, -D_PADRAO)
@@ -170,10 +167,7 @@ export const CARANGUEJO_VERTICAL_02_RETORNO = makeCaranguejo(3 * (LARGURA / 5), 
 export const CARANGUEJO_03_RETORNO = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, -D_PADRAO, 0)
 
 
-
-
-
-//Colocar os Testes (OK?)
+//Colocar os Testes
 export function movePersonagem(pessoa: Personagem): Personagem {
     if (pessoa.x > pessoa.limiteDireito) {
         return { ...pessoa, x: pessoa.limiteDireito, dx: -pessoa.dx }
@@ -189,29 +183,6 @@ export function movePersonagem(pessoa: Personagem): Personagem {
     }
     return { ...pessoa, x: pessoa.x + pessoa.dx, y: pessoa.y + pessoa.dy }
 }
-
-testes(() => {
-    describe('testes de moveT', () => {
-            test('move vaca inicial', () => {
-                expect(movePersonagem(TARTARUGA0)).toStrictEqual(TARTARUGA1);
-            });
-            test('move vaca limite direito', () => {
-                expect(movePersonagem(TARTARUGA_FIM)).toStrictEqual(TARTARUGA_VIRANDO);
-            });
-            test('move vaca limite esquerdo', () => {
-                expect(movePersonagem(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA - 1, ALTURA / 2, -3, 0)))
-                    .toStrictEqual(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, ALTURA / 2, 3, 0));
-            });
-            test('move vaca limite baixo', () => {
-                expect(movePersonagem(makeTartaruga(LARGURA / 2, LIMITE_BAIXO_TARTARUGA+1, 0, 3)))
-                    .toStrictEqual(makeTartaruga(LARGURA/2, LIMITE_BAIXO_TARTARUGA, 0, -3));
-            });
-            test('move vaca limite cima', () => {
-                expect(movePersonagem(makeTartaruga(LARGURA/2, LIMITE_CIMA_TARTARUGA-1, 0, -3)))
-                    .toStrictEqual(makeTartaruga(LARGURA/2, LIMITE_CIMA_TARTARUGA, 0, 3));
-            });
-        });
-})
 
 export function desenhaTartaruga(pessoa: Personagem): Imagem{
 
@@ -261,15 +232,6 @@ export function desenhaGaivotas(pessoa: Personagem[]): Imagem{
 
     return folha
 }
-
-testes(() => {
-    describe('testes de desenhaT', () => {
-        test('desenha vaca inicial', () => {
-            expect(desenhaJogo(TARTARUGA0))
-                .toStrictEqual(colocarImagem(IMG_TARTARUGA_LESTE, TARTARUGA0.x, TARTARUGA0.y, TELA));
-        });
-    });
-})
 
 
 function trataTeclaTartaruga(tuga: Personagem, tecla: string): Personagem {
