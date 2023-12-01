@@ -162,7 +162,11 @@ export const CARANGUEJO_VERTICAL_02_RETORNO = makeCaranguejo(3 * (LARGURA / 5), 
 //const CARANGUEJO_03_FIM = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, D_PADRAO, 0)
 export const CARANGUEJO_03_RETORNO = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, -D_PADRAO, 0)
 
-
+/**
+ * Move os personagens de forma automática
+ * @param pessoa 
+ * @returns Personagem
+ */
 export function movePersonagem(pessoa: Personagem): Personagem {
     if (pessoa.x > pessoa.limiteDireito) {
         return { ...pessoa, x: pessoa.limiteDireito, dx: -pessoa.dx }
