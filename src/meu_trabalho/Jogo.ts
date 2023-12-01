@@ -23,28 +23,28 @@ import { distancia } from "./Utilidades";
 //Definição de Dados
 
 
-interface Bloco{
-    x: number,
-    y: number,
+//interface Bloco{
+//    x: number,
+//    y: number,
+//
+//    altura: number,
+//    largura: number
+//}
 
-    altura: number,
-    largura: number
-}
+//interface ItemVida {
+//    x: number,
+//    y: number
+//}
 
-interface ItemVida {
-    x: number,
-    y: number
-}
-
-const ItemVida1 = {x: ALTURA/2, y: LARGURA/2}
+//const ItemVida1 = {x: ALTURA/2, y: LARGURA/2}
 //-----------------------------------------------------------------------------------------------------------
 
 export interface Jogo {
     tart: Personagem,
     caras: Personagem[],
     gaivas: Personagem[],
-    itensVida: ItemVida[],
-    blocos: Bloco[],
+    //itensVida: ItemVida[],
+    //blocos: Bloco[],
     vidas: number,
 
     gameOver: boolean,
@@ -52,22 +52,34 @@ export interface Jogo {
     vitoria: boolean
 }
 
-// function makeJogo(tart: Personagem, caras: Personagem[], gaivas: Personagem[], itensVida: ItemVida[], blocos: Bloco[], vidas: number){
-//     return {tart: Personagem,
-//             caras: Personagem[],
-//             gaivas: Personagem[],
-//             itensVida: ItemVida[],
-//             blocos: Bloco[],
-//             vidas: number;
-// }
-// }
+/**
+ * Cria um jogo com as características desejadas pelo programador
+ * @param tart 
+ * @param caras 
+ * @param gaivas 
+ * @param vidas 
+ * @returns jogo
+ */
+export function makeJogo(tart: Personagem, caras: Personagem[], gaivas: Personagem[], /*itensVida: ItemVida[], blocos: Bloco[],*/ vidas: number){
+     return {tart: tart,
+             caras: caras,
+             gaivas: gaivas,
+             //itensVida: ItemVida[],
+             //blocos: Bloco[],
+             vidas: 3,
+
+             gameOver: false,
+             objetivo: LARGURA * 0.7,
+             vitoria: false
+ }
+ }
 
 export const EXEMPLO_JOGO = {
     tart:TARTARUGA_INICIAL,
     caras:[CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL/*, CARANGUEJO_03_INICIAL*/],
     gaivas:[GAIVOTA_01_INICIAL],
-    itensVida:[ItemVida1],
-    blocos:[],
+    //itensVida:[ItemVida1],
+    //blocos:[],
     vidas: 3,
 
     gameOver: false,
@@ -86,6 +98,11 @@ export function colidindo(tart: Personagem, inimigo: Personagem): boolean {
     return distanciaVacaCc < (tart.raioDeColisão + inimigo.raioDeColisão) * 1.5;
 }
 
+/**
+ * Muda o estado do jogo - Ocorreu colisão? As vidas acabaram? O Jogador ganhou ou perdeu? Os persongens se moveram?
+ * @param game 
+ * @returns Jogo
+ */
 export function atualizaJogo(game: Jogo): Jogo{
     
     function colidindoComAlgum(tart: Personagem, inimigos: Personagem[]): boolean {
@@ -110,7 +127,6 @@ export function atualizaJogo(game: Jogo): Jogo{
     let gaivasMovidas = gaivotasGiradas.map(movePersonagem)
 
    
-
     return{...game, tart: tartMovido, caras: carasMovidos, gaivas: gaivasMovidas}
 }
 
@@ -142,8 +158,12 @@ export function desenhaJogo(game: Jogo): Imagem {
 }
 
 //-----------------------------------------------------------------------------------------------------------
-
-//Teste
+/**
+ * Decide o que e como as coisas se mexem ao apertar as teclas do teclado
+ * @param game 
+ * @param tecla 
+ * @returns Jogo
+ */
 export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
     if (tecla == "ArrowRight"){
         return {...game, tart:{...game.tart, dx: D_PADRAO}}
@@ -164,7 +184,12 @@ export function trataTeclaJogo(game: Jogo, tecla: String): Jogo {
     return game
 }
 
-//Teste
+/**
+ * Decide o que acontece ao soltar as teclas do teclado
+ * @param game 
+ * @param tecla 
+ * @returns Jogo
+ */
 export function trataSoltaTeclaJogo(game: Jogo, tecla: String): Jogo {
     if (tecla == "ArrowRight" || tecla == "ArrowLeft"){
         return {...game, tart:{...game.tart, dx: 0}}
@@ -173,7 +198,4 @@ export function trataSoltaTeclaJogo(game: Jogo, tecla: String): Jogo {
     if (tecla == "ArrowUp" || tecla == "ArrowDown"){
         return {...game, tart:{...game.tart, dy: 0}}
     }
-
-    //return {...game, tart:{...game.tart, dx: 0, dy:0}}
-  
 }

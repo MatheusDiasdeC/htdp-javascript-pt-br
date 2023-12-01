@@ -7,7 +7,7 @@ import imgPraia1 from "./Praia1.png";
 import imgPraia2 from "./Praia2.png";
 
 //Criação da Tela
-export const [LARGURA, ALTURA] = [1400, 600]
+export const [LARGURA, ALTURA] = [1350, 600]
 export const TELA = cenaVazia(LARGURA, ALTURA)
 
 

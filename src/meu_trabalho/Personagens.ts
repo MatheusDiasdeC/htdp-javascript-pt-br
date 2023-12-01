@@ -10,7 +10,7 @@ import {ALTURA, D_PADRAO, GIRO, IMG_CARANGUEJO, IMG_GAIVOTA_LESTE, IMG_GAIVOTA_O
         Y_INICIAL_TARTARUGA} from "./Constantes";
 import { desenhaJogo, Jogo } from "./Jogo";
 
-//interface genérica para todos os personagens. Vai substituitir todas as coisas que se movem.
+//interface genérica para todos os personagens. Todas as coisas que se movem são personagens
 export interface Personagem {
     x: number,
     y: number,
@@ -27,7 +27,6 @@ export interface Personagem {
 
 //-----------------------------------------------------------------------------------------------------------
 //EXEMPLOS
-//const TART_INICIAL = {x: LIMITE_ESQUERDA_TARTARUGA, y: ALTURA/2, dx: 0, dy: 0}
 
 export const TART_INICIAL = {
     x: LIMITE_ESQUERDA_TARTARUGA,
@@ -40,7 +39,6 @@ export const TART_INICIAL = {
     limiteEsquerdo: LIMITE_ESQUERDA_TARTARUGA,
     limiteDireito: LIMITE_DIREITA_TARTARUGA
 }
-//dx e dy mudam no trata tecla
 
 export const CARA_INICIAL = {
     x: 2 * (LIMITE_ESQUERDA_CARANGUEJO / 5),
@@ -70,13 +68,11 @@ export const GAIVOTA_INICIAL = {
     //Alterar para "Limites Gaivota"
 }
 
-//EXEMPLOS
-////const CARA_VERTICAL = {x: 2 * (LARGURA / 5), y: LIMITE_CIMA_TARTARUGA, dx: 0, dy: D_PADRAO}
-////const CARA_HORIZONTAL = {X: 2 * (LARGURA / 5), y: ALTURA / 3, dx: D_PADRAO, dy: 0}
-
 
 //-----------------------------------------------------------------------------------------------------
-//Cria um "objeto" T (Tartaruga), C (Caranguejo) e G (Gaivota)
+
+//Cria um "Personagem" Tartaruga, Caranguejo e Gaivota
+//Recebem 4 números: Posição no eixo x e y e a velocidade e sentido em que se movem nesses eixos
 export function makeTartaruga(x: number, y: number, dx: number, dy: number): Personagem {
     return { x: x,
             y: y,
@@ -167,7 +163,6 @@ export const CARANGUEJO_VERTICAL_02_RETORNO = makeCaranguejo(3 * (LARGURA / 5), 
 export const CARANGUEJO_03_RETORNO = makeCaranguejo(LARGURA / 5, Y_INICIAL_CARANGUEJO, -D_PADRAO, 0)
 
 
-//Colocar os Testes
 export function movePersonagem(pessoa: Personagem): Personagem {
     if (pessoa.x > pessoa.limiteDireito) {
         return { ...pessoa, x: pessoa.limiteDireito, dx: -pessoa.dx }
@@ -207,6 +202,11 @@ export function desenhaCaranguejos(pessoa: Personagem[]): Imagem{
     //colocarImagem(IMG_CARANGUEJO, pessoa.x, pessoa.y, folha)
 }
 
+/**
+ * Faz com que a gaivota se mova de forma circular
+ * @param pessoa 
+ * @returns Personagem
+ */
 export function giraGaivota(pessoa: Personagem): Personagem{
 
     let angulo = Math.atan2(pessoa.dy , pessoa.dx)
@@ -233,7 +233,7 @@ export function desenhaGaivotas(pessoa: Personagem[]): Imagem{
     return folha
 }
 
-//Precisa Teste
+
 function trataTeclaTartaruga(tuga: Personagem, tecla: string): Personagem {
     if (tecla == "ArrowRight") {
         return {...tuga, dx: D_PADRAO, dy: 0}

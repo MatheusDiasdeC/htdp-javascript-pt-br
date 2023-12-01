@@ -1,7 +1,7 @@
 import { testes } from "../../lib/utils";
-import { ALTURA, D_PADRAO, GIRO, LARGURA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_TARTARUGA, LIMITE_ESQUERDA_TARTARUGA } from "./Constantes";
-import { EXEMPLO_JOGO, colidindo } from "./Jogo";
-import { TARTARUGA0, TARTARUGA1, TARTARUGA_FIM, TARTARUGA_VIRANDO, makeTartaruga, makeGaivota, movePersonagem, GAIVOTA_01_INICIAL, giraGaivota } from "./Personagens";
+import { ALTURA, D_PADRAO, GIRO, LARGURA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_TARTARUGA, LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA } from "./Constantes";
+import { EXEMPLO_JOGO, colidindo, makeJogo, trataSoltaTeclaJogo, trataTeclaJogo } from "./Jogo";
+import { TARTARUGA0, TARTARUGA1, TARTARUGA_FIM, TARTARUGA_VIRANDO, makeTartaruga, makeGaivota, movePersonagem, GAIVOTA_01_INICIAL, giraGaivota, TARTARUGA_INICIAL, CARANGUEJO_01_INICIAL, CARANGUEJO_02_INICIAL } from "./Personagens";
 import { distancia } from "./Utilidades";
 
 testes(() => {
@@ -15,8 +15,6 @@ testes(() => {
     });
   });
 
-
-  //Testes Reais
   testes(() => {
     describe('testes de movePersonagem', () => {
             test('move personagem inicial', () => {
@@ -77,15 +75,60 @@ testes(() => {
     })
 })
 
-//Estou aqui
 testes(() => {
     describe("Testando trataTeclaJogo", () => {
         test("Direita", () => {
-            const jog = EXEMPLO_JOGO
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, D_PADRAO, 0), [], [], 3)
             const string = "ArrowRight"
 
-            expect()
+            expect(trataTeclaJogo(jog, string)).toStrictEqual(newJog) 
         })
 
+        test("Esquerda", () => {
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, -D_PADRAO, 0), [], [], 3)
+            const string = "ArrowLeft"
+
+            expect(trataTeclaJogo(jog, string)).toStrictEqual(newJog)   
+        })
+
+        test("Cima", () => {
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 0, -D_PADRAO), [], [], 3)
+            const string = "ArrowUp"
+
+            expect(trataTeclaJogo(jog, string)).toStrictEqual(newJog)  
+        })
+
+        test("Baixo", () => {
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 0, D_PADRAO), [], [], 3)
+            const string = "ArrowDown"
+
+            expect(trataTeclaJogo(jog, string)).toStrictEqual(newJog)  
+        })
+    })
+})
+
+testes(() => {
+    describe("Testando trataSoltaTeclaJogo", () => {
+        test("Horizontal", () => {
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 0, 0), [], [], 3)
+            const string = "ArrowRight" || "ArrowLeft"
+
+            expect(trataSoltaTeclaJogo(jog, string)).toStrictEqual(newJog)
+            
+        })
+
+        test("Vertical", () => {
+            const jog = makeJogo(TARTARUGA_INICIAL, [], [], 3)
+            const newJog = makeJogo(makeTartaruga(LIMITE_ESQUERDA_TARTARUGA, Y_INICIAL_TARTARUGA, 0, 0), [], [], 3)
+            const string = "ArrowUp" || "ArrowDown"
+
+            expect(trataSoltaTeclaJogo(jog, string)).toStrictEqual(newJog)
+            
+        })
     })
 })
