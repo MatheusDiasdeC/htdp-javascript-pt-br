@@ -75,13 +75,17 @@ export const EXEMPLO_JOGO = {
     vitoria: false
 }
 
-//Teste
+/**
+ * Calcula se houve colisão ou não
+ * @param tart 
+ * @param inimigo 
+ * @returns boolean
+ */
 export function colidindo(tart: Personagem, inimigo: Personagem): boolean {
     let distanciaVacaCc = distancia(tart.x, tart.y, inimigo.x, inimigo.y);
     return distanciaVacaCc < (tart.raioDeColisão + inimigo.raioDeColisão) * 1.5;
 }
 
-//Teste
 export function atualizaJogo(game: Jogo): Jogo{
     
     function colidindoComAlgum(tart: Personagem, inimigos: Personagem[]): boolean {
@@ -111,6 +115,7 @@ export function atualizaJogo(game: Jogo): Jogo{
 }
 
 //---------------------------------
+
 
 export function desenhaJogo(game: Jogo): Imagem {
     

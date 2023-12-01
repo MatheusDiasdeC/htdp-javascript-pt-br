@@ -1,5 +1,6 @@
 import { testes } from "../../lib/utils";
 import { ALTURA, D_PADRAO, GIRO, LARGURA, LIMITE_BAIXO_TARTARUGA, LIMITE_CIMA_TARTARUGA, LIMITE_ESQUERDA_TARTARUGA } from "./Constantes";
+import { EXEMPLO_JOGO, colidindo } from "./Jogo";
 import { TARTARUGA0, TARTARUGA1, TARTARUGA_FIM, TARTARUGA_VIRANDO, makeTartaruga, makeGaivota, movePersonagem, GAIVOTA_01_INICIAL, giraGaivota } from "./Personagens";
 import { distancia } from "./Utilidades";
 
@@ -58,3 +59,33 @@ testes(() => {
     })
 })
 
+testes(() => {
+    describe("Testando colidindo", () => {
+        test("bate", () => {
+            const T1 = makeTartaruga(10, 20, D_PADRAO, D_PADRAO)
+            const T2 = makeTartaruga(10, 20, D_PADRAO, D_PADRAO)
+
+            expect(colidindo(T1, T2)).toStrictEqual(true)
+        })
+
+        test("não bate", () => {
+            const T1 = makeTartaruga(10, 20, D_PADRAO, D_PADRAO)
+            const T2 = GAIVOTA_01_INICIAL
+
+            expect(colidindo(T1, T2)).toStrictEqual(false)
+        })
+    })
+})
+
+//Estou aqui
+testes(() => {
+    describe("Testando trataTeclaJogo", () => {
+        test("Direita", () => {
+            const jog = EXEMPLO_JOGO
+            const string = "ArrowRight"
+
+            expect()
+        })
+
+    })
+})
